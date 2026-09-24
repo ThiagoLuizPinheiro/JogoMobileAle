@@ -23,10 +23,15 @@ public class BallKick : MonoBehaviour
 
         chutada = true;
 
+        // SOM DO CHUTE
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.TocarChute();
+        }
+
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
-        // Quanto maior a força, maior será a subida
         float forcaVertical = forca * forcaCima;
 
         Vector3 direcao =

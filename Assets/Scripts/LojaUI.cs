@@ -7,10 +7,20 @@ public class LojaUI : MonoBehaviour
     public void AbrirLoja()
     {
         lojaPanel.SetActive(true);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.TocarAbrirLoja();
+        }
     }
 
     public void FecharLoja()
     {
         lojaPanel.SetActive(false);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.TocarClique();
+        }
     }
 }

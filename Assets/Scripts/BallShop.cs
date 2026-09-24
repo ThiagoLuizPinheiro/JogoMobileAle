@@ -39,10 +39,9 @@ public class BallShop : MonoBehaviour
     {
         int indice = 1;
 
-        if (skins.Length <= indice)
+        if (skins == null || skins.Length <= indice)
             return;
 
-        // Se ainda não comprou
         if (!skins[indice].desbloqueada)
         {
             if (playerMoney == null)
@@ -50,6 +49,12 @@ public class BallShop : MonoBehaviour
 
             if (playerMoney.dinheiro < skins[indice].preco)
             {
+                // SOM DE ERRO
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.TocarErro();
+                }
+
                 Debug.Log("Dinheiro insuficiente!");
                 return;
             }
@@ -58,10 +63,23 @@ public class BallShop : MonoBehaviour
 
             skins[indice].desbloqueada = true;
 
+            // SOM DE COMPRA
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarCompra();
+            }
+
             Debug.Log("Beach Ball comprada!");
         }
+        else
+        {
+            // SOM DE EQUIPAR
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarEquipar();
+            }
+        }
 
-        // Equipa
         skinEquipada = indice;
 
         AtualizarModelos();
@@ -74,6 +92,12 @@ public class BallShop : MonoBehaviour
             return;
 
         skinEquipada = 0;
+
+        // SOM DE EQUIPAR
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.TocarEquipar();
+        }
 
         AtualizarModelos();
         AtualizarTexto();
@@ -98,6 +122,9 @@ public class BallShop : MonoBehaviour
     void AtualizarTexto()
     {
         if (textoBeachBall == null)
+            return;
+
+        if (skins == null || skins.Length <= 1)
             return;
 
         if (!skins[1].desbloqueada)

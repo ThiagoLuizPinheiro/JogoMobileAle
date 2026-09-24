@@ -39,10 +39,6 @@ public class UpgradeManager : MonoBehaviour
         AtualizarUI();
     }
 
-    // =========================
-    // COMPRAR FORÇA
-    // =========================
-
     public void ComprarForca()
     {
         if (playerMoney == null || kickTiming == null)
@@ -60,17 +56,25 @@ public class UpgradeManager : MonoBehaviour
 
             AtualizarUI();
 
+            // SOM DE COMPRA
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarCompra();
+            }
+
             Debug.Log("Upgrade de força comprado!");
         }
         else
         {
+            // SOM DE ERRO
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarErro();
+            }
+
             Debug.Log("Dinheiro insuficiente!");
         }
     }
-
-    // =========================
-    // COMPRAR MULTIPLICADOR
-    // =========================
 
     public void ComprarMultiplicador()
     {
@@ -89,6 +93,12 @@ public class UpgradeManager : MonoBehaviour
 
             AtualizarUI();
 
+            // SOM DE COMPRA
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarCompra();
+            }
+
             Debug.Log(
                 "Multiplicador atual: x" +
                 multiplicadorDinheiro
@@ -96,13 +106,15 @@ public class UpgradeManager : MonoBehaviour
         }
         else
         {
+            // SOM DE ERRO
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarErro();
+            }
+
             Debug.Log("Dinheiro insuficiente!");
         }
     }
-
-    // =========================
-    // ATUALIZAR UI
-    // =========================
 
     void AtualizarUI()
     {

@@ -60,14 +60,12 @@ public class BallDistance : MonoBehaviour
         if (!ballKick.Chutada)
             return;
 
-        // Esconde os upgrades
         if (!paineisEscondidos)
         {
             EsconderPaineisUpgrade();
             paineisEscondidos = true;
         }
 
-        // Calcula distância
         float distancia = Vector3.Distance(
             new Vector3(posicaoInicial.x, 0, posicaoInicial.z),
             new Vector3(transform.position.x, 0, transform.position.z)
@@ -91,15 +89,12 @@ public class BallDistance : MonoBehaviour
             }
         }
 
-        // Se já recebeu dinheiro, não continua
         if (recebeuDinheiro)
             return;
 
-        // Precisa ter tocado no chão
         if (!tocouNoChao)
             return;
 
-        // Usa somente a velocidade linear
         float velocidade =
             rb.linearVelocity.magnitude;
 
@@ -112,16 +107,11 @@ public class BallDistance : MonoBehaviour
             tempoComVelocidadeBaixa = 0f;
         }
 
-        // Bola realmente parou
         if (tempoComVelocidadeBaixa >= tempoParada)
         {
             FinalizarChute();
         }
     }
-
-    // =========================================================
-    // GOL
-    // =========================================================
 
     public void AtivarMultiplicadorGol()
     {
@@ -143,14 +133,14 @@ public class BallDistance : MonoBehaviour
 
         fezGol = true;
 
-        Debug.Log(
-            "⚽ GOL! Aguardando a bola terminar..."
-        );
-    }
+        // 🔊 SOM DO GOL
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.TocarGol();
+        }
 
-    // =========================================================
-    // FINALIZAR
-    // =========================================================
+        Debug.Log("⚽ GOL! Aguardando a bola terminar...");
+    }
 
     void FinalizarChute()
     {
@@ -159,19 +149,16 @@ public class BallDistance : MonoBehaviour
 
         recebeuDinheiro = true;
 
-        // Para completamente
         rb.linearVelocity = Vector3.zero;
         rb.angularVelocity = Vector3.zero;
 
         float dinheiroGanho = maiorDistancia;
 
-        // Gol = dobro
         if (fezGol)
         {
             dinheiroGanho *= multiplicadorGol;
         }
 
-        // Upgrade de dinheiro
         UpgradeManager upgradeManager =
             FindFirstObjectByType<UpgradeManager>();
 
@@ -186,6 +173,12 @@ public class BallDistance : MonoBehaviour
             playerMoney.AdicionarDinheiro(
                 dinheiroGanho
             );
+
+            // 🔊 SOM DO DINHEIRO
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarDinheiro();
+            }
         }
 
         Debug.Log(
@@ -198,10 +191,6 @@ public class BallDistance : MonoBehaviour
         Resetar();
     }
 
-    // =========================================================
-    // DETECTAR CHÃO
-    // =========================================================
-
     private void OnCollisionEnter(Collision collision)
     {
         if (ballKick == null)
@@ -210,21 +199,22 @@ public class BallDistance : MonoBehaviour
         if (!ballKick.Chutada)
             return;
 
-        // Verifica Layer
+        // Verifica se bateu em algo da camada Ground
         if (((1 << collision.gameObject.layer) & camadaDoChao) != 0)
         {
             tocouNoChao = true;
 
+            // 🔊 SOM DO QUIQUE
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.TocarQuique();
+            }
+
             Debug.Log("⚽ Tocou no chão!");
 
-            // Zera o contador de parada
             tempoComVelocidadeBaixa = 0f;
         }
     }
-
-    // =========================================================
-    // RESET
-    // =========================================================
 
     void Resetar()
     {
@@ -245,10 +235,6 @@ public class BallDistance : MonoBehaviour
 
         MostrarPaineisUpgrade();
     }
-
-    // =========================================================
-    // PAINÉIS
-    // =========================================================
 
     void MostrarPaineisUpgrade()
     {
