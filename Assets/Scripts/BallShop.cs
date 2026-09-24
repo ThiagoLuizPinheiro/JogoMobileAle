@@ -102,7 +102,7 @@ public class BallShop : MonoBehaviour
 
         if (!skins[1].desbloqueada)
         {
-            textoBeachBall.text = "COMPRAR\nR$ 500";
+            textoBeachBall.text = "COMPRAR";
         }
         else if (skinEquipada == 1)
         {

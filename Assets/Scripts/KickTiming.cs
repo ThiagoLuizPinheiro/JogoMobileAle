@@ -1,6 +1,5 @@
 using UnityEngine;
 using UnityEngine.UI;
-using UnityEngine.InputSystem;
 
 public class KickTiming : MonoBehaviour
 {
@@ -11,8 +10,8 @@ public class KickTiming : MonoBehaviour
     public float forcaMinima = 10f;
     public float forcaMaxima = 40f;
 
-    [Header("Timing")]
-    public float velocidadeBarra = 1.5f;
+    [Header("Velocidade da barra")]
+    public float velocidadeBarra = 3f;
 
     private float valor = 0f;
     private int direcao = 1;
@@ -33,11 +32,10 @@ public class KickTiming : MonoBehaviour
 
     void Update()
     {
-        // Se a bola já foi chutada, não mexe mais na barra
         if (ballKick != null && ballKick.Chutada)
             return;
 
-        // Movimento da barra
+        // Movimento automático da barra
         valor += direcao * velocidadeBarra * Time.deltaTime;
 
         if (valor >= 1f)
@@ -53,18 +51,20 @@ public class KickTiming : MonoBehaviour
         }
 
         if (barraForca != null)
-            barraForca.value = valor;
-
-        // Aperta E para chutar
-        if (Keyboard.current != null &&
-            Keyboard.current.eKey.wasPressedThisFrame)
         {
-            Chutar();
+            barraForca.value = valor;
         }
     }
 
-    void Chutar()
+    // Esse método será chamado quando clicar na barra
+    public void ChutarPeloSlider()
     {
+        if (ballKick == null)
+            return;
+
+        if (ballKick.Chutada)
+            return;
+
         float forca = Mathf.Lerp(
             forcaMinima,
             forcaMaxima,
